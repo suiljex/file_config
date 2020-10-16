@@ -76,9 +76,9 @@ namespace slx
 
   int Config::Load(std::istream & i_fin) //TODO Исправить парсинг
   {
-    static const std::regex comment_regex{R"x(\s*[;#])x"};
-    static const std::regex section_regex{R"x(\s*\[([^\]]+)\])x"};
-    static const std::regex value_regex{R"x(\s*(\S[^ \t=]*)\s*=\s*((\s?\S+)+)\s*$)x"};
+    static const std::regex comment_regex{R"x(\s*[;#].*)x"};
+    static const std::regex section_regex{R"x(\s*\[([^\]]+)\]\s*[;#]?.*)x"};
+    static const std::regex value_regex{R"x(\s*(\S[^ \t=]*)\s*=\s*((\s?\S+)+?)\s*[;#]?.*)x"};
     std::string current_section;
     std::smatch pieces;
     for (std::string line; std::getline(i_fin, line);)
