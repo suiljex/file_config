@@ -12,26 +12,36 @@ namespace slx
 
   }
 
-  std::string Config::GetParameterValue(const std::string & i_section, const std::string & i_parameter)
+  std::string Config::GetParameterValue(
+      const std::string & i_section
+      , const std::string & i_parameter)
   {
+    if (parameters.count(i_section) == 0
+        || parameters[i_section].count(i_parameter) == 0)
+    {
+      return std::string();
+    }
+
     return parameters[i_section][i_parameter];
   }
 
-  int Config::SetParameterValue(const std::string & i_section, const std::string & i_parameter, const std::string & i_value)
+  int Config::SetParameterValue(
+      const std::string & i_section
+      , const std::string & i_parameter
+      , const std::string & i_value)
   {
     parameters[i_section][i_parameter] = i_value;
     return 0;
   }
 
-  int Config::DelParameter(const std::string & i_section, const std::string & i_parameter)
+  int Config::DelParameter(
+      const std::string & i_section
+      , const std::string & i_parameter)
   {
-    if (parameters.count(i_section) == 0)
+    if (parameters.count(i_section) == 0
+        || parameters[i_section].count(i_parameter) == 0)
     {
       return 1;
-    }
-    if (parameters[i_section].count(i_parameter) == 0)
-    {
-      return 2;
     }
 
     parameters[i_section].erase(i_parameter);
