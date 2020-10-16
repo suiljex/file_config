@@ -86,9 +86,9 @@ namespace slx
 
   int Config::Load(std::istream & i_fin) //TODO Исправить парсинг
   {
-    static const std::regex comment_regex{R"x(\s*[;#].*)x"};
-    static const std::regex section_regex{R"x(\s*\[([^\]]+)\]\s*[;#]?.*)x"};
-    static const std::regex value_regex{R"x(\s*(\S[^ \t=]*)\s*=\s*((\s?\S+)+?)\s*[;#]?.*)x"};
+    static const std::regex comment_regex{R"(^\s*(?:[;#].*)?$)"};
+    static const std::regex section_regex{R"(^\s*\[([^\s=#;\[\]]+)\]\s*(?:[;#].*)?$)"};
+    static const std::regex value_regex{R"(^\s*((?:[^\s=#;\[\]])+?)\s*=\s*([^\s=#;\[\]](?:[^=#;\[\]])*?)\s*(?:[;#].*)?$)"};
     std::string current_section;
     std::smatch pieces;
     for (std::string line; std::getline(i_fin, line);)
@@ -99,17 +99,11 @@ namespace slx
       }
       else if (std::regex_match(line, pieces, section_regex))
       {
-        if (pieces.size() == 2)
-        { // exactly one match
-          current_section = pieces[1].str();
-        }
+        current_section = pieces[1].str();
       }
       else if (std::regex_match(line, pieces, value_regex))
       {
-        if (pieces.size() == 4)
-        { // exactly enough matches
-          parameters[current_section][pieces[1].str()] = pieces[2].str();
-        }
+        parameters[current_section][pieces[1].str()] = pieces[2].str();
       }
     }
 
